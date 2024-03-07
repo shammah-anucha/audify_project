@@ -1,4 +1,5 @@
 // import 'package:audio_book_app/models/audio_player_service.dart';
+import 'package:audio_book_app/models/audio_player_service.dart';
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/books.dart';
 import 'package:audio_book_app/screens/audio_player_screen.dart';
@@ -27,9 +28,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (ctx) => Audios(),
           ),
-          // ChangeNotifierProvider(
-          //   create: (context) => AudioPlayerService(),
-          // ),
+          ChangeNotifierProvider(
+            create: (context) => AudioPlayerService(),
+          ),
         ],
         child: MaterialApp(
             title: 'Audify',
