@@ -11,14 +11,14 @@ import 'audio.dart';
 class Audios with ChangeNotifier {
   final List<Audio> _audios = [
     Audio(
-        audioId: 'a1',
+        audioId: 1,
         bookId: 'b1',
         userId: 'u1',
         audioFile:
             "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
         audioName: "the_frog_prince_part1.mp3"),
     Audio(
-        audioId: 'a1',
+        audioId: 2,
         bookId: 'b1',
         userId: 'u1',
         audioFile:

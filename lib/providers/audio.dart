@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class Audio with ChangeNotifier {
-  final String audioId;
+  final int audioId;
   final String userId;
   final String bookId;
   final String audioFile;
