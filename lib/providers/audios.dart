@@ -1,37 +1,69 @@
 // import 'dart:io';
-
+import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'audio.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:uuid/uuid.dart';
-// import 'dart:convert';
-// import 'package:dio/dio.dart';
-// import 'package:audio_book_app/models/http_exception.dart';
+import 'package:http/http.dart' as http;
 
 class Audios with ChangeNotifier {
-  final List<Audio> _audios = [
-    Audio(
-        audioId: 1,
-        bookId: 'b1',
-        userId: 'u1',
-        audioFile:
-            "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
-        audioName: "the_frog_prince_part1.mp3"),
-    Audio(
-        audioId: 2,
-        bookId: 'b1',
-        userId: 'u1',
-        audioFile:
-            "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
-        audioName: "the_frog_prince_part2.mp3"),
-    Audio(
-        audioId: 3,
-        bookId: 'b1',
-        userId: 'u1',
-        audioFile:
-            "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part3.mp3",
-        audioName: "the_frog_prince_part3.mp3"),
+  // final List<Audio> _audios = [
+  //   Audio(
+  //       audioId: 1,
+  //       bookId: 1,
+  //       userId: 1,
+  //       audioFile: [
+  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
+  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
+  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part3.mp3"
+  //       ],
+  //       audioName: "the_frog_prince",
+  //       bookImage:
+  //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
+  //   Audio(
+  //     audioId: 2,
+  //     bookId: 2,
+  //     userId: 1,
+  //     audioFile: [
+  //       "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3"
+  //     ],
+  //     audioName: "sara_menker",
+  //     bookImage:
+  //         "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
+  //   ),
+  // ];
+
+  List<Audio> _audios = [
+    // Audio(
+    //     audioId: 1,
+    //     bookId: 1,
+    //     userId: 1,
+    //     audioFile: [
+    //       "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
+    //     ],
+    //     audioName: "the_frog_prince_part1",
+    //     bookImage:
+    //         "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
+    // Audio(
+    //     audioId: 2,
+    //     bookId: 1,
+    //     userId: 1,
+    //     audioFile: [
+    //       "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
+    //     ],
+    //     audioName: "the_frog_prince_part2",
+    //     bookImage:
+    //         "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
+    // Audio(
+    //   audioId: 3,
+    //   bookId: 2,
+    //   userId: 1,
+    //   audioFile: [
+    //     "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3"
+    //   ],
+    //   audioName: "sara_menker",
+    //   bookImage:
+    //       "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
+    // ),
   ];
 
   // current song playing index
@@ -60,6 +92,19 @@ A U D I O P L A Y E R
   bool _isPlaying = false;
 
 // play the audio
+
+  // void playAudio(int index) async {
+  //   // final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
+  //   int i = 0;
+  //   while (i < _audios[index].audioFile.length) {
+  //     final audioUrl = _audios[index].audioFile[i];
+  //     await _audioPlayer.stop();
+  //     await _audioPlayer.play(audioUrl);
+  //     _isPlaying = true;
+  //     _currentAudioIndex = index;
+  //     notifyListeners();
+  //   }
+  // }
 
   void playAudio(int index) async {
     final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
@@ -169,6 +214,12 @@ G E T T E R S
   Duration get currentDuration => _currentDuration;
   Duration get totalDuration => _totalDuration;
 
+  // List getAudioFilesById(int audioId) {
+  //   final audio = _audios.firstWhere((audio) => audio.audioId == audioId,
+  //       orElse: () => throw Exception('Audio ID not found'));
+  //   return audio.audioFile;
+  // }
+
 /*
 
 
@@ -189,42 +240,51 @@ S E T T E R S
     notifyListeners();
   }
 
-  Audio findById(String id) {
+  Audio findById(int id) {
     return audios.firstWhere((audio) => audio.audioId == id);
   }
 
-//   Future<void> fetchAndSetEvents() async {
-//     final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/');
-//     final response = await http.get(url);
-//     final decoded_response = json.decode(response.body);
-//     final int number_of_objects = decoded_response.length;
-//     print(json.decode(response.body));
-//     print(response.body.length);
-//     final List<Event> loadedEvent = [];
-//     final extractedData = json.decode(response.body);
-//     // print(extractedData["name"]);
-//     if (extractedData == null) {
-//       return;
-//     }
-//     // extractedData.forEach((eventId, eventData) {
-//     int i = 0;
-//     while (i < number_of_objects) {
-//       loadedEvent.add(Event(
-//         event_id: extractedData[i]['event_id'],
-//         title: extractedData[i]['title'],
-//         eventdate: extractedData[i]['eventdate'],
-//         time: extractedData[i]['time'],
-//         imageUrl: extractedData[i]['imageUrl'],
-//         location: extractedData[i]['location'],
-//         location_url: extractedData[i]['location_url'],
-//         host: extractedData[i]['host'],
-//       ));
-//       i++;
-//     }
+  Future<void> fetchAndSetAudios(String? token) async {
+    String tokenString = token!;
+    print("Token string is: $tokenString");
 
-//     _events = loadedEvent.reversed.toList();
-//     notifyListeners();
-//   }
+    final url = Uri.parse('http://127.0.0.1:8000/api/v1/audios/');
+
+    Map<String, String>? headers = {
+      'Authorization': 'Bearer $tokenString',
+      'Content-Type': 'application/json',
+    };
+
+    // I modified the http.dart to Map<String, String?>? for it to work
+    final response = await http.get(url, headers: headers);
+    final decodedResponse = json.decode(response.body);
+    final int numberOfObjects = decodedResponse.length;
+    final List<Audio> loadedBook = [];
+    final extractedData = json.decode(response.body);
+    if (extractedData == null) {
+      return;
+    }
+
+    int i = 0;
+    while (i < numberOfObjects) {
+      loadedBook.add(Audio(
+          audioId: extractedData[i]['audio_id'],
+          bookId: extractedData[i]['book_id'],
+          userId: extractedData[i]['user_id'],
+          audioName: extractedData[i]['audio_name'],
+          audioFile: extractedData[i]['audio_file'],
+          bookImage: extractedData[i]['book_image']));
+      i++;
+    }
+
+    _audios = loadedBook.toList();
+
+    notifyListeners();
+  }
+
+  //   _events = loadedEvent.reversed.toList();
+  //   notifyListeners();
+  // }
 
 //   // final String baseUrl = "http://127.0.0.1:8000/api/v1/events/";
 

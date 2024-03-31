@@ -1,3 +1,4 @@
+import 'package:audio_book_app/providers/auth.dart';
 import 'package:audio_book_app/providers/books.dart';
 import 'package:audio_book_app/widgets/app_drawer.dart';
 import 'package:audio_book_app/widgets/mylibrary.dart';
@@ -13,6 +14,28 @@ class MyLibraryScreen extends StatefulWidget {
 }
 
 class _MyLibraryScreenState extends State<MyLibraryScreen> {
+  // ignore: unused_field
+  var _isInit = true;
+  // ignore: unused_field
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
+    _isLoading = true;
+    final authData = Provider.of<Auth>(context, listen: false);
+    Provider.of<Books>(context, listen: false)
+        .fetchAndSetBooks(authData.token)
+        .then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final booksData = Provider.of<Books>(context);
@@ -27,7 +50,7 @@ class _MyLibraryScreenState extends State<MyLibraryScreen> {
       body: ListView.builder(
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: books[i],
-          child: const MyLibrary(),
+          child: MyLibrary(bookId: books[i].bookId), // Pass bookId here
         ),
         itemCount: books.length,
       ),

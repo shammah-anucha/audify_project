@@ -36,6 +36,7 @@ dependencies:
   audioplayers: ^0.20.1
   path_provider: ^2.1.2
   http: ^0.13.5
+  dio: ^5.4.2+1
  
   
 
@@ -72,6 +73,7 @@ flutter:
     - assets/The-Frog-Prince-Landscape-Book-CKF-FKB.pdf
     - assets/output.jpg
     - assets/
+    - assets/png-clipart-audio-book.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

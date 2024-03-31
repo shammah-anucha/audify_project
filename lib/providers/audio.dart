@@ -3,10 +3,11 @@ import 'package:flutter/foundation.dart';
 
 class Audio with ChangeNotifier {
   final int audioId;
-  final String userId;
-  final String bookId;
+  final int userId;
+  final int bookId;
   final String audioFile;
   final String audioName;
+  final String bookImage;
 
   Audio({
     required this.audioId,
@@ -14,5 +15,6 @@ class Audio with ChangeNotifier {
     required this.bookId,
     required this.audioFile,
     required this.audioName,
+    required this.bookImage,
   });
 }

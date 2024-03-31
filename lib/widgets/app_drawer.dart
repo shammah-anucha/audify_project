@@ -1,6 +1,8 @@
-import 'package:audio_book_app/screens/logout_screen.dart';
+import 'package:audio_book_app/providers/auth.dart';
+// import 'package:audio_book_app/screens/logout_screen.dart';
 import 'package:audio_book_app/screens/mylibrary_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../screens/home_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -34,7 +36,9 @@ class AppDrawer extends StatelessWidget {
           leading: const Icon(Icons.exit_to_app),
           title: const Text('Logout'),
           onTap: (() {
-            Navigator.of(context).pushReplacementNamed(LogoutScreen.routeName);
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('/');
+            Provider.of<Auth>(context, listen: false).logout();
           }),
         ),
       ]),
