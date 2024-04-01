@@ -6,64 +6,35 @@ import 'audio.dart';
 import 'package:http/http.dart' as http;
 
 class Audios with ChangeNotifier {
-  // final List<Audio> _audios = [
-  //   Audio(
-  //       audioId: 1,
-  //       bookId: 1,
-  //       userId: 1,
-  //       audioFile: [
-  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
-  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
-  //         "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part3.mp3"
-  //       ],
-  //       audioName: "the_frog_prince",
-  //       bookImage:
-  //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
-  //   Audio(
-  //     audioId: 2,
-  //     bookId: 2,
-  //     userId: 1,
-  //     audioFile: [
-  //       "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3"
-  //     ],
-  //     audioName: "sara_menker",
-  //     bookImage:
-  //         "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
-  //   ),
-  // ];
-
   List<Audio> _audios = [
-    // Audio(
-    //     audioId: 1,
-    //     bookId: 1,
+    //   Audio(
+    //       audioId: 1,
+    //       bookId: 1,
+    //       userId: 1,
+    //       audioFile:
+    //           "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
+    //       audioName: "the_frog_prince_part1",
+    //       bookImage:
+    //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
+    //   Audio(
+    //       audioId: 2,
+    //       bookId: 1,
+    //       userId: 1,
+    //       audioFile:
+    //           "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
+    //       audioName: "the_frog_prince_part2",
+    //       bookImage:
+    //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
+    //   Audio(
+    //     audioId: 3,
+    //     bookId: 2,
     //     userId: 1,
-    //     audioFile: [
-    //       "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
-    //     ],
-    //     audioName: "the_frog_prince_part1",
+    //     audioFile:
+    //         "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3",
+    //     audioName: "sara_menker",
     //     bookImage:
-    //         "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
-    // Audio(
-    //     audioId: 2,
-    //     bookId: 1,
-    //     userId: 1,
-    //     audioFile: [
-    //       "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
-    //     ],
-    //     audioName: "the_frog_prince_part2",
-    //     bookImage:
-    //         "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
-    // Audio(
-    //   audioId: 3,
-    //   bookId: 2,
-    //   userId: 1,
-    //   audioFile: [
-    //     "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3"
-    //   ],
-    //   audioName: "sara_menker",
-    //   bookImage:
-    //       "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
-    // ),
+    //         "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
+    //   ),
   ];
 
   // current song playing index
@@ -93,31 +64,43 @@ A U D I O P L A Y E R
 
 // play the audio
 
+  void playAudio() async {
+    final String url = _audios[_currentAudioIndex!].audioFile;
+    await _audioPlayer.stop(); // stop the current song
+    await _audioPlayer.play(url); // play the new song
+    _isPlaying = true;
+    notifyListeners();
+  }
+
   // void playAudio(int index) async {
   //   // final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
+  //   print('index is: $index');
+  //   print(_audios);
   //   int i = 0;
-  //   while (i < _audios[index].audioFile.length) {
-  //     final audioUrl = _audios[index].audioFile[i];
+  //   while (i < _audios.length) {
+  //     final audioUrl = _audios[i].audioFile;
+  //     print('audioUrl is: $audioUrl');
   //     await _audioPlayer.stop();
   //     await _audioPlayer.play(audioUrl);
   //     _isPlaying = true;
   //     _currentAudioIndex = index;
+  //     print('currentAudioIndex is: $_currentAudioIndex');
   //     notifyListeners();
   //   }
   // }
 
-  void playAudio(int index) async {
-    final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
-    final audioUrl = _audios[audIndex].audioFile;
-    print('index is: $index');
-    print('audIndex is: $audIndex');
-    print('audioUrl is: $audioUrl');
-    await _audioPlayer.stop();
-    await _audioPlayer.play(audioUrl);
-    _isPlaying = true;
-    _currentAudioIndex = index;
-    notifyListeners();
-  }
+  // void playAudio(int index) async {
+  //   final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
+  //   final audioUrl = _audios[audIndex].audioFile;
+  //   print('index is: $index');
+  //   print('audIndex is: $audIndex');
+  //   print('audioUrl is: $audioUrl');
+  //   await _audioPlayer.stop();
+  //   await _audioPlayer.play(audioUrl);
+  //   _isPlaying = true;
+  //   _currentAudioIndex = index;
+  //   notifyListeners();
+  // }
 
 // pause current song
   void pauseAudio() async {
@@ -214,7 +197,7 @@ G E T T E R S
   Duration get currentDuration => _currentDuration;
   Duration get totalDuration => _totalDuration;
 
-  // List getAudioFilesById(int audioId) {
+  // String getAudioFilesById(int audioId) {
   //   final audio = _audios.firstWhere((audio) => audio.audioId == audioId,
   //       orElse: () => throw Exception('Audio ID not found'));
   //   return audio.audioFile;
@@ -233,7 +216,7 @@ S E T T E R S
     _currentAudioIndex = newIndex;
 
     if (newIndex != null) {
-      playAudio(newIndex);
+      playAudio();
     }
 
     //update UI
@@ -264,6 +247,12 @@ S E T T E R S
     if (extractedData == null) {
       return;
     }
+    int a = 4;
+    print(extractedData[a]['book_id']);
+    print("user_id: ${extractedData[a]['user_id']}");
+    print("book_name: ${extractedData[a]['audio_name']}");
+    print("book_file: ${extractedData[a]['audio_file']}");
+    print("book_image: ${extractedData[a]['book_image']}");
 
     int i = 0;
     while (i < numberOfObjects) {

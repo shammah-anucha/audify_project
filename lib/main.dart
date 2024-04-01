@@ -1,5 +1,6 @@
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/books.dart';
+// import 'package:audio_book_app/screens/audio_page_screen.dart';
 import 'package:audio_book_app/screens/audio_player_screen.dart';
 import 'package:audio_book_app/screens/convertin_screen.dart';
 import 'package:audio_book_app/screens/home_screen.dart';
@@ -61,7 +62,9 @@ class MyApp extends StatelessWidget {
                     MyLibraryScreen.routeName: (ctx) => const MyLibraryScreen(),
                     SignUpScreen.routeName: (ctx) => SignUpScreen(),
                     AuthScreen.routeName: (ctx) => AuthScreen(),
-                    AudioPlayerScreen.routeName: (ctx) => AudioPlayerScreen()
+                    AudioPlayerScreen.routeName: (ctx) =>
+                        const AudioPlayerScreen(),
+                    // AudioPage.routeName: (ctx) => const AudioPage()
                   })),
     );
   }

@@ -2,6 +2,8 @@ import 'package:audio_book_app/providers/audio.dart';
 import 'package:audio_book_app/providers/auth.dart';
 import 'package:audio_book_app/providers/book.dart';
 import 'package:audio_book_app/providers/books.dart';
+// import 'package:audio_book_app/providers/book.dart';
+// import 'package:audio_book_app/providers/books.dart';
 // import 'package:audio_book_app/providers/auth.dart';
 // import 'package:audio_book_app/providers/book.dart';
 // import 'package:audio_book_app/providers/books.dart';
@@ -14,6 +16,7 @@ import 'package:provider/provider.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   const AudioPlayerScreen({Key? key}) : super(key: key);
+
   static const routeName = '/audioplayerscreen';
 
   @override
@@ -38,11 +41,12 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 
   @override
   void initState() {
+    super.initState();
     audiosprovider = Provider.of<Audios>(context, listen: false);
     setState(() {
       _isLoading = true;
     });
-    _isLoading = true;
+
     final authData = Provider.of<Auth>(context, listen: false);
     Provider.of<Audios>(context, listen: false)
         .fetchAndSetAudios(authData.token)
@@ -51,56 +55,106 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         _isLoading = false;
       });
     });
-    super.initState();
   }
 
-  void goToAudio(int audioIndex) {
-    // update current audio index
-    audiosprovider.currentAudioIndex = audioIndex;
+  // void goToAudio(int audioIndex) {
+  //   // update current audio index
+  //   audiosprovider.currentAudioIndex = audioIndex;
 
-    // navigate to song page
+  //   // navigate to song page
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const AudioPage(),
+  //     ),
+  //   );
+  // }
+
+  void goToAudio(BuildContext context, Audio audio) {
+    final audiosProvider = Provider.of<Audios>(context, listen: false);
+    audiosProvider.currentAudioIndex = audiosProvider.audios.indexOf(audio);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AudioPage(),
+        builder: (context) => AudioPage(filteredAudios: [audio]),
       ),
     );
   }
+
+  // void goToAudio(int audioIndex) {
+  //   // update current audio index
+  //   audiosprovider.currentAudioIndex = audioIndex;
+
+  //   // get the bookId of the current audio
+  //   int bookId = audiosprovider.audios[audioIndex].bookId;
+
+  //   // navigate to song page and pass the bookId
+  //   Navigator.pushNamed(
+  //     context,
+  //     AudioPage.routeName,
+  //     arguments: {
+  //       'bookId': bookId,
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     final bookId = ModalRoute.of(context)!.settings.arguments as int;
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Audio List'),
-        ),
-        drawer: AppDrawer(),
-        body: Consumer<Audios>(
-          builder: (context, value, child) {
-            final audios = value.audios
-                .where((element) => element.bookId == bookId)
-                .toList(); // Convert to list
-            return ListView.builder(
-              itemCount: audios.length,
-              itemBuilder: (context, index) {
-                final Audio audio = audios[index]; // Get audio at index
-                final Book book = Provider.of<Books>(context, listen: false)
-                    .findById(audio.bookId); // Find book by audio's bookId
-                return ListTile(
-                  title: Text(audio.audioName),
-                  subtitle:
-                      Text(book.bookName), // Display book name as subtitle
-                  leading: Image.network(book.bookImage),
-                  onTap: () =>
-                      goToAudio(audio.audioId), // Pass audio instead of index
-                );
-              },
-            );
-          },
-        ));
+      backgroundColor: const Color.fromARGB(255, 243, 243, 243),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Audio List'),
+      ),
+      drawer: AppDrawer(),
+      body: Consumer<Audios>(
+        builder: (context, value, child) {
+          final filteredAudios = value.audios
+              .where((element) => element.bookId == bookId)
+              .toList();
+
+          return ListView.builder(
+            itemCount: filteredAudios.length,
+            itemBuilder: (context, index) {
+              final Audio audio = filteredAudios[index];
+              final Book book = Provider.of<Books>(context, listen: false)
+                  .findById(audio.bookId); // Find book by audio's bookId
+              return ListTile(
+                title: Text(audio.audioName),
+                subtitle: Text(book.bookName),
+                leading: Image.network(audio.bookImage),
+                onTap: () =>
+                    goToAudio(context, audio), // Pass audio instead of index
+              );
+            },
+          );
+        },
+      ),
+      // body: Consumer<Audios>(
+      //   builder: (context, value, child) {
+      //     final audios = value.audios
+      //         .where((element) => element.bookId == bookId)
+      //         .toList(); // Convert to list
+      //     return ListView.builder(
+      //       itemCount: audios.length,
+      //       itemBuilder: (context, index) {
+      //         final Audio audio = audios[index]; // Get audio at index
+      //         final Book book = Provider.of<Books>(context, listen: false)
+      //             .findById(audio.bookId); // Find book by audio's bookId
+      //         return ListTile(
+      //           title: Text(audio.audioName),
+      //           subtitle:
+      //               Text(book.bookName), // Display book name as subtitle
+      //           leading: Image.network(audio.bookImage),
+      //           onTap: () => goToAudio(index), // Pass audio instead of index
+      //         );
+      //       },
+      //     );
+      //   },
+      // )
+    );
   }
 }
 
