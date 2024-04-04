@@ -1,10 +1,16 @@
-import 'package:audio_book_app/screens/convertin_screen.dart';
+// import 'dart:async';
+
+import 'package:audio_book_app/providers/audios.dart';
+import 'package:audio_book_app/providers/auth.dart';
+import 'package:audio_book_app/screens/converting_screen.dart';
 import 'package:audio_book_app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:audio_book_app/providers/books.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,8 +23,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // ignore: unused_field
+  var _isInit = true;
+  // ignore: unused_field
+  var _isLoading = false;
   File? _file;
   String audioName = '';
+  // final int bookId;
   getFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -38,6 +50,86 @@ class _HomeScreenState extends State<HomeScreen> {
         content: Text('Please select file'),
       ));
     }
+  }
+
+  // void _saveBookToS3() async {
+  //   final authData = Provider.of<Auth>(context, listen: false);
+  //   Provider.of<Books>(context, listen: false).addBook(_file, authData.token);
+  // }
+
+  // void _saveAudioToS3() async {
+  //   print("Yes");
+  //   final isValid = _formKey.currentState!.validate();
+  //   if (!isValid) {
+  //     return;
+  //   }
+  //   _formKey.currentState!.save();
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   try {
+  //     final authData = Provider.of<Auth>(context, listen: false);
+  //     Future<int> bookId = Provider.of<Books>(context, listen: false)
+  //         .addBook(_file, authData.token);
+
+  //     // Navigate to the ConvertingScreen
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const ConvertingScreen()),
+  //     );
+
+  //     // Add audio after book is uploaded
+  //     await Provider.of<Audios>(context, listen: false)
+  //         .addAudio(bookId, audioName, authData.token);
+
+  //     // Navigate back after conversion
+  //     Navigator.pop(context);
+  //   } catch (error) {
+  //     throw (error);
+  //   }
+
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  // }
+
+  void _saveAudioToS3() async {
+    print("First: $audioName");
+    Navigator.pop(context);
+    // Navigate to the ConvertingScreen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ConvertingScreen()),
+    );
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    print("audioName: $audioName");
+    try {
+      final authData = Provider.of<Auth>(context, listen: false);
+      int bookId = await Provider.of<Books>(context, listen: false)
+          .addBook(_file, authData.token);
+      print("book_id: ${bookId}");
+      print("token: ${authData.token}");
+
+      // Add audio after book is uploaded
+      await Provider.of<Audios>(context, listen: false)
+          .addAudio(bookId, audioName, authData.token);
+
+      // Navigate back after conversion
+      Navigator.pop(context);
+    } catch (error) {
+      throw (error);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -156,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //     .pushReplacementNamed(
                                         //         ConvertingScreen.routeName),
                                         onPressed: () {
+                                          // _saveBookToS3();
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
@@ -183,27 +276,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         },
                                                         onSaved: (value) {
                                                           audioName = value!;
+                                                          // print(audioName);
                                                         },
                                                       ),
                                                       const SizedBox(
                                                           height: 20),
                                                       ElevatedButton(
                                                         onPressed: () {
-                                                          if (_formKey
-                                                              .currentState!
-                                                              .validate()) {
-                                                            _formKey
-                                                                .currentState!
-                                                                .save();
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(); // Close the dialog
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pushReplacementNamed(
-                                                                    ConvertingScreen
-                                                                        .routeName);
-                                                          }
+                                                          //                                                    Navigator.push(
+                                                          //   context,
+                                                          //   MaterialPageRoute(builder: (context) => const ConvertingScreen())
+                                                          // );
+                                                          _saveAudioToS3();
                                                         },
                                                         child:
                                                             const Text('Done'),

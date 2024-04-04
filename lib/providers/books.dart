@@ -1,6 +1,9 @@
 // import 'dart:io';
 
 // import 'package:audio_book_app/providers/auth.dart';
+// import 'dart:html';
+import 'dart:io' as io;
+
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'book.dart';
@@ -41,12 +44,6 @@ class Books with ChangeNotifier {
   }
 
   Future<void> fetchAndSetBooks(String? token) async {
-    // if (token == null) {
-    //   // Handle null token gracefully, such as logging an error or returning early
-    //   print('Token is null');
-    //   return;
-    // }
-
     String tokenString = token!;
     print("Token string is: $tokenString");
 
@@ -63,22 +60,13 @@ class Books with ChangeNotifier {
     final response = await http.get(url, headers: headers);
     final decodedResponse = json.decode(response.body);
     final int numberOfObjects = decodedResponse.length;
-    print(json.decode(response.body));
-    print(numberOfObjects);
     final List<Book> loadedBook = [];
     final extractedData = json.decode(response.body);
     // print(extractedData["name"]);
     if (extractedData == null) {
       return;
     }
-    // extractedData.forEach((eventId, eventData) {
-    print("issue!!!!!");
-    int a = 1;
-    print(extractedData[a]['book_id']);
-    print("user_id: ${extractedData[a]['user_id']}");
-    print(extractedData[a]['book_name']);
-    print(extractedData[a]['book_file']);
-    print(extractedData[a]['book_image']);
+
     int i = 0;
     while (i < numberOfObjects) {
       loadedBook.add(Book(
@@ -93,7 +81,6 @@ class Books with ChangeNotifier {
 
     _books = loadedBook.reversed.toList();
 
-    print(_books);
     notifyListeners();
   }
 
@@ -104,42 +91,129 @@ class Books with ChangeNotifier {
   // }
 
 // // http://127.0.0.1:8000/api/v1/events/
-//   Future<void> addEvent(Event event) async {
-//     final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/{event_id}');
-//     var uuid = Uuid();
-//     try {
-//       final response = await http.post(url,
-//           headers: <String, String>{
-//             'Content-Type': 'application/json; charset=UTF-8',
-//           },
-//           body: json.encode({
-//             // 'event_id': uuid.v4(),
-//             'title': event.title,
-//             'eventdate': event.eventdate,
-//             'time': event.time,
-//             'imageUrl': event.imageUrl,
-//             'location': event.location,
-//             'location_url': event.location_url,
-//             'host': event.host,
-//           }));
-//       print(json.decode(response.body));
-//       final newEvent = Event(
-//         event_id: json.decode(response.body)['event_id'],
-//         title: event.title,
-//         eventdate: event.eventdate,
-//         time: event.time,
-//         imageUrl: event.imageUrl,
-//         location: event.location,
-//         location_url: event.location_url,
-//         host: event.host,
-//       );
-//       _events.add(newEvent);
-//       notifyListeners();
-//     } catch (error) {
-//       print(error);
-//       throw (error);
-//     }
-//   }
+  // Future<int?> addBook(io.File? pdfFile, String? token) async {
+  //   String tokenString = token!;
+  //   print("Token string is: $tokenString");
+
+  //   Map<String, String>? headers = {
+  //     'Authorization': 'Bearer $tokenString',
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   List<int> pdfBytes = await pdfFile!.readAsBytes();
+  //   print(pdfBytes);
+
+  //   // final url = Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/');
+
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/'));
+  //   request.headers.addAll(headers);
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath(
+  //       pdfFile.path
+  //           .split("/")
+  //           .toString(), // NOTE - this value must match the 'file=' at the start of -F
+  //       pdfFile.path,
+  //       // contentType: MediaType('image', 'png'),
+  //     ),
+  //   );
+
+  //   final response = await http.Response.fromStream(await request.send());
+
+  //   print(response.body);
+
+  //   // final req = http.MultipartFile.fromBytes(pdfBytes, );
+
+  //   // Map<String, String>? headers = {
+  //   //   'Authorization': 'Bearer $tokenString',
+  //   //   'Content-Type': 'application/json',
+  //   // };
+  //   try {
+  //     //   final response = await http.post(url,
+  //     //       headers: headers,
+  //     //       body: json.encode({
+  //     //         // 'event_id': uuid.v4(),
+  //     //         'file': pdfFile,
+  //     //       }));
+  //     //   print("issue!!!");
+  //     //   print(json.decode(response.body));
+
+  //     final newBook = Book(
+  //       bookId: json.decode(response.body)['book_id'],
+  //       userId: json.decode(response.body)['user_id'],
+  //       bookFile: json.decode(response.body)['book_file'],
+  //       bookImage: json.decode(response.body)['book_image'],
+  //       bookName: json.decode(response.body)['book_name'],
+  //     );
+  //     _books.add(newBook);
+  //     notifyListeners();
+  //     print(_books);
+  //     // Return the bookId
+  //     final int? bookId = json.decode(response.body)['book_id'];
+
+  //     return bookId;
+  //   } catch (error) {
+  //     print(error);
+  //     throw (error);
+  //   }
+  // }
+
+  Future<int> addBook(io.File? pdfFile, String? token) async {
+    String tokenString = token!;
+    print("Token string is: $tokenString");
+    print(pdfFile!.path);
+    print(pdfFile.path.split("/").last);
+
+    Map<String, String>? headers = {
+      'Authorization': 'Bearer $tokenString',
+      'Content-Type': 'application/json',
+    };
+
+    // List<int> pdfBytes = await pdfFile.readAsBytes();
+    // print(pdfBytes);
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/'));
+    request.headers.addAll(headers);
+    request.files.add(
+      await http.MultipartFile.fromPath("file", pdfFile.path,
+          filename: pdfFile.path.split("/").last),
+    );
+
+    final response = await http.Response.fromStream(await request.send());
+
+    print(response.body);
+
+    try {
+      // Parse the response JSON
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      // Create a new book object from the response data
+      final newBook = Book(
+        bookId: responseData['book_id'],
+        userId: responseData['user_id'],
+        bookFile: responseData['book_file'],
+        bookImage: responseData['book_image'],
+        bookName: responseData['book_name'],
+      );
+
+      // Add the new book to the list of books
+      _books.add(newBook);
+      // final int? bookId = responseData['book_id'];
+      // print(bookId);
+
+      // Notify listeners about the changes
+      notifyListeners();
+
+      // Return the bookId
+      final int bookId = responseData['book_id'];
+      return bookId;
+    } catch (error) {
+      print(error);
+
+      throw (error);
+    }
+  }
 
 //   Future<void> updateEvent(String id, Event newEvent) async {
 //     final evIndex = _events.indexWhere((ev) => ev.event_id == id);

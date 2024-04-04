@@ -267,8 +267,47 @@ S E T T E R S
     }
 
     _audios = loadedBook.toList();
+    print(_audios);
 
     notifyListeners();
+  }
+
+  Future<void> addAudio(int bookId, String audioName, String? token) async {
+    String tokenString = token!;
+    print("Token string is: $tokenString");
+    print("Audio bookId is: $bookId");
+    print("Audio audioName is: $audioName");
+
+    final url = Uri.parse(
+        'http://127.0.0.1:8000/api/v1/audios/text_to_audio/$bookId?audio_name=$audioName');
+
+    Map<String, String>? headers = {
+      'Authorization': 'Bearer $tokenString',
+      'Content-Type': 'application/json',
+    };
+    try {
+      final response = await http.post(url,
+          headers: headers,
+          body: json.encode({
+            "book_id": bookId,
+            "audio_name": audioName,
+          }));
+      final responseData = json.decode(response.body);
+      print(responseData);
+      final newAudio = Audio(
+        audioId: responseData['audio_id'],
+        bookId: responseData['book_id'],
+        userId: responseData['user_id'],
+        audioFile: responseData['audio_file'],
+        bookImage: responseData['book_image'],
+        audioName: responseData['audio_name'],
+      );
+      _audios.add(newAudio);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw (error);
+    }
   }
 
   //   _events = loadedEvent.reversed.toList();

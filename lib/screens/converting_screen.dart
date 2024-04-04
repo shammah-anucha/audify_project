@@ -10,7 +10,7 @@ class ConvertingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Audify'),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: AppDrawer(),
       body: Padding(
