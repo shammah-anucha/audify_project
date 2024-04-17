@@ -4,6 +4,7 @@
 // import 'dart:html';
 import 'dart:io' as io;
 
+import 'package:audio_book_app/providers/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'book.dart';
@@ -158,6 +159,62 @@ class Books with ChangeNotifier {
   //   }
   // }
 
+  // Future<int> addBook(io.File? pdfFile, String? token) async {
+  //   String tokenString = token!;
+  //   print("Token string is: $tokenString");
+  //   print(pdfFile!.path);
+  //   print(pdfFile.path.split("/").last);
+
+  //   Map<String, String>? headers = {
+  //     'Authorization': 'Bearer $tokenString',
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   // List<int> pdfBytes = await pdfFile.readAsBytes();
+  //   // print(pdfBytes);
+
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/'));
+  //   request.headers.addAll(headers);
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath("file", pdfFile.path,
+  //         filename: pdfFile.path.split("/").last),
+  //   );
+
+  //   final response = await http.Response.fromStream(await request.send());
+  //   print(response.body);
+
+  //   // if (response.statusCode >= 400) {}
+  //   try {
+  //     // Parse the response JSON
+  //     final Map<String, dynamic> responseData = json.decode(response.body);
+
+  //     // Create a new book object from the response data
+  //     final newBook = Book(
+  //       bookId: responseData['book_id'],
+  //       userId: responseData['user_id'],
+  //       bookFile: responseData['book_file'],
+  //       bookImage: responseData['book_image'],
+  //       bookName: responseData['book_name'],
+  //     );
+
+  //     // Add the new book to the list of books
+  //     _books.add(newBook);
+  //     // final int? bookId = responseData['book_id'];
+  //     // print(bookId);
+
+  //     // Notify listeners about the changes
+  //     notifyListeners();
+
+  //     // Return the bookId
+  //     final int bookId = responseData['book_id'];
+  //     return bookId;
+  //   } catch (error) {
+  //     print("An unexpected error occurred: $error");
+  //     throw error;
+  //   }
+  // }
+
   Future<int> addBook(io.File? pdfFile, String? token) async {
     String tokenString = token!;
     print("Token string is: $tokenString");
@@ -169,49 +226,39 @@ class Books with ChangeNotifier {
       'Content-Type': 'application/json',
     };
 
-    // List<int> pdfBytes = await pdfFile.readAsBytes();
-    // print(pdfBytes);
-
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/'));
-    request.headers.addAll(headers);
-    request.files.add(
-      await http.MultipartFile.fromPath("file", pdfFile.path,
-          filename: pdfFile.path.split("/").last),
-    );
-
-    final response = await http.Response.fromStream(await request.send());
-
-    print(response.body);
-
     try {
-      // Parse the response JSON
-      final Map<String, dynamic> responseData = json.decode(response.body);
-
-      // Create a new book object from the response data
-      final newBook = Book(
-        bookId: responseData['book_id'],
-        userId: responseData['user_id'],
-        bookFile: responseData['book_file'],
-        bookImage: responseData['book_image'],
-        bookName: responseData['book_name'],
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://127.0.0.1:8000/api/v1/Books/uploadbook/'),
+      );
+      request.headers.addAll(headers);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "file",
+          pdfFile.path,
+          filename: pdfFile.path.split("/").last,
+        ),
       );
 
-      // Add the new book to the list of books
-      _books.add(newBook);
-      // final int? bookId = responseData['book_id'];
-      // print(bookId);
+      final response = await http.Response.fromStream(await request.send());
 
-      // Notify listeners about the changes
-      notifyListeners();
-
-      // Return the bookId
-      final int bookId = responseData['book_id'];
-      return bookId;
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return responseData['book_id'];
+      } else if (response.statusCode == 403) {
+        throw Exception(response.body);
+      } else if (response.statusCode == 413) {
+        throw Exception("File size is too large. The Maximum File size is 5MB");
+      } else if (response.statusCode == 404) {
+        throw Exception("User not found");
+      } else if (response.statusCode == 500) {
+        throw Exception("Internal Server Error");
+      } else {
+        throw Exception("Unexpected error occurred (${response.statusCode})");
+      }
     } catch (error) {
-      print(error);
-
-      throw (error);
+      // print("An unexpected error occurred: $error");
+      throw error;
     }
   }
 
@@ -241,19 +288,19 @@ class Books with ChangeNotifier {
 //     }
 //   }
 
-//   Future<void> deleteEvent(String id) async {
-//     final evIndex = _events.indexWhere((ev) => ev.event_id == id);
-//     final event_id = _events[evIndex].event_id;
-//     var existingEvent = _events[evIndex];
-//     final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/$event_id');
-//     _events.removeAt(evIndex);
-//     notifyListeners();
-//     final response = await http.delete(url);
-//     if (response.statusCode >= 400) {
-//       _events.insert(evIndex, existingEvent);
-//       notifyListeners();
-//       throw HttpException('Could not delete product.');
-//     }
-//     existingEvent = null;
-//   }
+  Future<void> deleteBook(int id) async {
+    final bookIndex = _books.indexWhere((book) => book.bookId == id);
+    final book_id = _books[bookIndex].bookId;
+    var existingBook = _books[bookIndex];
+    final url = Uri.parse('http://127.0.0.1:8000/api/v1/Books/$book_id');
+    _books.removeAt(bookIndex);
+    notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _books.insert(bookIndex, existingBook);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    // existingBook = null;
+  }
 }

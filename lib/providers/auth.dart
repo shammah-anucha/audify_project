@@ -207,6 +207,8 @@ class Auth with ChangeNotifier {
         return _token!;
       } else if (response.statusCode == 405) {
         throw HttpException('Method Not Allowed');
+      } else if (response.statusCode == 400) {
+        throw HttpException('Incorrect email or password');
       } else {
         throw HttpException('Authentication failed');
       }

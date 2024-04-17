@@ -1,5 +1,6 @@
 import 'package:audio_book_app/widgets/audify_title.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'signup_screen.dart';
 // import '../models/http_exception.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         SingleChildScrollView(
           child: Container(
-            height: 900,
+            height: 1000,
             width: deviceSize.width,
             child: Column(children: [
               AudifyTitle(),
@@ -199,15 +200,17 @@ class _AuthCardState extends State<AuthCard> {
               const SizedBox(
                 height: 5,
               ),
-              TextButton(
-                child: const Text(
-                  'No Account? Join the Community!',
-                  style: TextStyle(color: Colors.deepOrange),
+              Flexible(
+                child: TextButton(
+                  child: const Text(
+                    'No Account? Join the Community!',
+                    style: TextStyle(color: Colors.deepOrange),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(SignUpScreen.routeName);
+                  },
                 ),
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(SignUpScreen.routeName);
-                },
               ),
             ],
           ),

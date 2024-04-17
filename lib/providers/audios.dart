@@ -1,5 +1,6 @@
 // import 'dart:io';
 import 'dart:convert';
+import 'package:audio_book_app/providers/auth.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'audio.dart';
@@ -247,12 +248,6 @@ S E T T E R S
     if (extractedData == null) {
       return;
     }
-    int a = 4;
-    print(extractedData[a]['book_id']);
-    print("user_id: ${extractedData[a]['user_id']}");
-    print("book_name: ${extractedData[a]['audio_name']}");
-    print("book_file: ${extractedData[a]['audio_file']}");
-    print("book_image: ${extractedData[a]['book_image']}");
 
     int i = 0;
     while (i < numberOfObjects) {
@@ -384,19 +379,56 @@ S E T T E R S
 //     }
 //   }
 
-//   Future<void> deleteEvent(String id) async {
-//     final evIndex = _events.indexWhere((ev) => ev.event_id == id);
-//     final event_id = _events[evIndex].event_id;
-//     var existingEvent = _events[evIndex];
-//     final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/$event_id');
-//     _events.removeAt(evIndex);
-//     notifyListeners();
-//     final response = await http.delete(url);
-//     if (response.statusCode >= 400) {
-//       _events.insert(evIndex, existingEvent);
-//       notifyListeners();
-//       throw HttpException('Could not delete product.');
-//     }
-//     existingEvent = null;
-//   }
+  Future<void> deleteAudio(int id) async {
+    final audioIndex = _audios.indexWhere((audio) => audio.audioId == id);
+    final audio_id = _audios[audioIndex].audioId;
+    var existingAudio = _audios[audioIndex];
+    final url = Uri.parse('http://127.0.0.1:8000/api/v1/Books/$audio_id');
+    _audios.removeAt(audioIndex);
+    notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _audios.insert(audioIndex, existingAudio);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    // existingBook = null;
+  }
+
+  // Future<void> deleteAll(int id) async {
+  //   final audioIndex = _audios.indexWhere((audio) => audio.bookId == id);
+  //   final book_id = _audios[audioIndex].bookId;
+  //   var existingAudio = _audios[audioIndex];
+  //   final url = Uri.parse('http://127.0.0.1:8000/api/v1/audios/DeleteAll/$id');
+  //   _audios.removeAt(audioIndex);
+  //   notifyListeners();
+  //   final response = await http.delete(url);
+  //   if (response.statusCode >= 400) {
+  //     _audios.insert(audioIndex, existingAudio);
+  //     notifyListeners();
+  //     throw HttpException('Could not delete product.');
+  //   }
+  //   // existingBook = null;
+  // }
+
+  Future<void> deleteAll(int bookId, String? token) async {
+    String tokenString = token!;
+
+    Map<String, String>? headers = {
+      'Authorization': 'Bearer $tokenString',
+      'Content-Type': 'application/json',
+    };
+    final url =
+        Uri.parse('http://127.0.0.1:8000/api/v1/audios/Delete_All/$bookId');
+
+    try {
+      final response = await http.delete(url, headers: headers);
+      if (response.statusCode >= 400) {
+        throw HttpException('Could not delete audio.');
+      }
+    } catch (e) {
+      print('Error: $e');
+      rethrow;
+    }
+  }
 }

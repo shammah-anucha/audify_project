@@ -38,6 +38,9 @@ dependencies:
   http: ^0.13.5
   dio: ^5.4.2+1
   marquee: ^2.0.2
+  country_picker: ^2.0.25
+  csc_picker: ^0.2.7
+  shared_preferences: ^2.2.3
  
   
 

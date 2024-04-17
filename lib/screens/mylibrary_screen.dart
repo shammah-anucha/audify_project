@@ -1,3 +1,4 @@
+import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/auth.dart';
 import 'package:audio_book_app/providers/books.dart';
 import 'package:audio_book_app/widgets/app_drawer.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyLibraryScreen extends StatefulWidget {
-  const MyLibraryScreen({super.key});
+  const MyLibraryScreen({Key? key}) : super(key: key);
   static const routeName = '/mylibrary';
 
   @override
@@ -21,9 +22,7 @@ class _MyLibraryScreenState extends State<MyLibraryScreen> {
 
   @override
   void initState() {
-    setState(() {
-      _isLoading = true;
-    });
+    super.initState();
     _isLoading = true;
     final authData = Provider.of<Auth>(context, listen: false);
     Provider.of<Books>(context, listen: false)
@@ -33,13 +32,37 @@ class _MyLibraryScreenState extends State<MyLibraryScreen> {
         _isLoading = false;
       });
     });
-    super.initState();
+  }
+
+  Future<bool?> _showDeleteConfirmationDialog(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context)
+                  .pop(false), // Dismiss dialog without deleting
+              child: const Text("CANCEL"),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(true), // Confirm deletion
+              child: const Text("DELETE"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final booksData = Provider.of<Books>(context);
     final books = booksData.items;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 243, 243),
       appBar: AppBar(
@@ -48,11 +71,26 @@ class _MyLibraryScreenState extends State<MyLibraryScreen> {
       ),
       drawer: AppDrawer(),
       body: ListView.builder(
-        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: books[i],
-          child: MyLibrary(bookId: books[i].bookId), // Pass bookId here
-        ),
         itemCount: books.length,
+        itemBuilder: (ctx, i) => Dismissible(
+          key: UniqueKey(), // Unique key for each Dismissible item
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20.0),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          confirmDismiss: (direction) => _showDeleteConfirmationDialog(context),
+          onDismissed: (direction) {
+            final authData = Provider.of<Auth>(context, listen: false);
+            Provider.of<Audios>(context, listen: false)
+                .deleteAll(books[i].bookId, authData.token);
+          },
+          child: ChangeNotifierProvider.value(
+            value: books[i],
+            child: MyLibrary(bookId: books[i].bookId), // Pass bookId here
+          ),
+        ),
       ),
     );
   }

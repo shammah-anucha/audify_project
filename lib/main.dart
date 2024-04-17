@@ -1,8 +1,10 @@
+import 'package:audio_book_app/models/conversion.dart';
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/books.dart';
 // import 'package:audio_book_app/screens/audio_page_screen.dart';
 import 'package:audio_book_app/screens/audio_player_screen.dart';
 import 'package:audio_book_app/screens/converting_screen.dart';
+import 'package:audio_book_app/screens/converting_second_screen.dart';
 import 'package:audio_book_app/screens/home_screen.dart';
 import 'package:audio_book_app/screens/login_screen.dart';
 import 'package:audio_book_app/screens/logout_screen.dart';
@@ -12,8 +14,11 @@ import 'package:audio_book_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './providers/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -34,6 +39,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Audios(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ConversionModel(),
+          child: MyApp(),
+        )
       ],
       child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -58,6 +67,8 @@ class MyApp extends StatelessWidget {
                     HomeScreen.routeName: (ctx) => const HomeScreen(),
                     ConvertingScreen.routeName: (ctx) =>
                         const ConvertingScreen(),
+                    ConvertingSecondScreen.routeName: (ctx) =>
+                        const ConvertingSecondScreen(),
                     LogoutScreen.routeName: (ctx) => const LogoutScreen(),
                     MyLibraryScreen.routeName: (ctx) => const MyLibraryScreen(),
                     SignUpScreen.routeName: (ctx) => SignUpScreen(),

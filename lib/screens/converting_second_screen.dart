@@ -1,12 +1,18 @@
+import 'package:audio_book_app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
-class ConvertingSecondScreen extends StatelessWidget {
-  const ConvertingSecondScreen({super.key});
-  static const routeName = '/converting-second-screen';
+class ConvertingScreen extends StatelessWidget {
+  const ConvertingScreen({super.key});
+  static const routeName = '/converting-screen';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Audify'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      drawer: AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
