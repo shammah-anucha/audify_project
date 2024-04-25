@@ -1,3 +1,6 @@
+// import 'package:audio_book_app/providers/reset_password.dart';
+import 'package:audio_book_app/screens/home_screen.dart';
+import 'package:audio_book_app/screens/recover_password.dart';
 import 'package:audio_book_app/widgets/audify_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -67,12 +70,12 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
 
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(Object error) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('An Error Occurred!'),
-        content: Text(message),
+        content: Text("$error"),
         actions: [
           TextButton(
               onPressed: () {
@@ -98,7 +101,9 @@ class _AuthCardState extends State<AuthCard> {
         _authData['username'],
         _authData['password'],
       );
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
+
     // on HttpException catch (error) {
     //   var errorMessage = 'Authentication failed';
     //   if (error.toString().contains('EMAIL_EXISTS')) {
@@ -114,8 +119,8 @@ class _AuthCardState extends State<AuthCard> {
     //   }
     //   _showErrorDialog(errorMessage);
     catch (error) {
-      const errorMessage = 'Could not authenticate you. Please try again later';
-      _showErrorDialog(errorMessage);
+      // const errorMessage = 'Could not authenticate you. Please try again later';
+      _showErrorDialog(error);
     }
 
     setState(() {
@@ -177,14 +182,18 @@ class _AuthCardState extends State<AuthCard> {
               const SizedBox(
                 height: 5,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: null,
-                    child: Text(
+                    // onPressed: null,
+                    child: const Text(
                       'Forgot your Password?',
                     ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          RecoverPasswordScreen.routeName);
+                    },
                   ),
                 ],
               ),

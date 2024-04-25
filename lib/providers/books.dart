@@ -4,7 +4,6 @@
 // import 'dart:html';
 import 'dart:io' as io;
 
-import 'package:audio_book_app/providers/auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'book.dart';
@@ -299,7 +298,7 @@ class Books with ChangeNotifier {
     if (response.statusCode >= 400) {
       _books.insert(bookIndex, existingBook);
       notifyListeners();
-      throw HttpException('Could not delete product.');
+      throw Exception('Could not delete product.');
     }
     // existingBook = null;
   }

@@ -1,6 +1,5 @@
 // import 'dart:io';
 import 'dart:convert';
-import 'package:audio_book_app/providers/auth.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'audio.dart';
@@ -269,9 +268,6 @@ S E T T E R S
 
   Future<void> addAudio(int bookId, String audioName, String? token) async {
     String tokenString = token!;
-    print("Token string is: $tokenString");
-    print("Audio bookId is: $bookId");
-    print("Audio audioName is: $audioName");
 
     final url = Uri.parse(
         'http://127.0.0.1:8000/api/v1/audios/text_to_audio/$bookId?audio_name=$audioName');
@@ -390,7 +386,7 @@ S E T T E R S
     if (response.statusCode >= 400) {
       _audios.insert(audioIndex, existingAudio);
       notifyListeners();
-      throw HttpException('Could not delete product.');
+      throw Exception('Could not delete product.');
     }
     // existingBook = null;
   }
@@ -424,7 +420,7 @@ S E T T E R S
     try {
       final response = await http.delete(url, headers: headers);
       if (response.statusCode >= 400) {
-        throw HttpException('Could not delete audio.');
+        throw Exception('Could not delete audio.');
       }
     } catch (e) {
       print('Error: $e');

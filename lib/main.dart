@@ -1,6 +1,7 @@
 import 'package:audio_book_app/models/conversion.dart';
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/books.dart';
+import 'package:audio_book_app/providers/reset_password.dart';
 // import 'package:audio_book_app/screens/audio_page_screen.dart';
 import 'package:audio_book_app/screens/audio_player_screen.dart';
 import 'package:audio_book_app/screens/converting_screen.dart';
@@ -9,12 +10,17 @@ import 'package:audio_book_app/screens/home_screen.dart';
 import 'package:audio_book_app/screens/login_screen.dart';
 import 'package:audio_book_app/screens/logout_screen.dart';
 import 'package:audio_book_app/screens/mylibrary_screen.dart';
+import 'package:audio_book_app/screens/recover_password.dart';
+import 'package:audio_book_app/screens/reset_password.dart';
 import 'package:audio_book_app/screens/signup_screen.dart';
+import 'package:audio_book_app/widgets/success.dart';
+import 'package:audio_book_app/widgets/thankyou.dart';
 // import 'package:audio_book_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './providers/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Audios(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ForgotPassword(),
         ),
         ChangeNotifierProvider(
           create: (context) => ConversionModel(),
@@ -75,6 +84,12 @@ class MyApp extends StatelessWidget {
                     AuthScreen.routeName: (ctx) => AuthScreen(),
                     AudioPlayerScreen.routeName: (ctx) =>
                         const AudioPlayerScreen(),
+                    Thankyou.routeName: (ctx) => const Thankyou(),
+                    RecoverPasswordScreen.routeName: (ctx) =>
+                        RecoverPasswordScreen(),
+                    ResetPassWordScreen.routeName: (ctx) =>
+                        ResetPassWordScreen(),
+                    SuccessScreen.routeName: (ctx) => const SuccessScreen(),
                     // AudioPage.routeName: (ctx) => const AudioPage()
                   })),
     );
