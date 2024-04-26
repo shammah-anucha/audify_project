@@ -1,5 +1,5 @@
+import 'dart:ffi';
 import 'dart:io';
-
 import 'package:audio_book_app/providers/user.dart';
 import 'package:audio_book_app/providers/users.dart';
 import 'package:audio_book_app/screens/home_screen.dart';
@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 import '../widgets/audify_title.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-// import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   static const routeName = '/signup';
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -25,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _selectedCountry = '';
 
   var _editedUser = User(
-    userId: '',
+    userId: null,
     firstName: '',
     lastName: '',
     email: '',
@@ -44,14 +45,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var _isInit = true;
   // ignore: unused_field
   var _isLoading = false;
-  // Map<String, String> _authData = {
-  //   'username': '',
-  //   'password': '',
-  // };
 
   @override
   void didChangeDependencies() {
-    final userId = ModalRoute.of(context)?.settings.arguments as int?;
+    final userId = ModalRoute.of(context)?.settings.arguments as Int?;
     if (userId != null) {
       _editedUser = Provider.of<Users>(context, listen: false).findById(userId);
       _initValues = {
@@ -83,18 +80,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'country_of_residence': user.country,
             'password': user.password,
           }));
-      print(json.decode(response.body));
-      // ignore: unused_field
-      final newUser = User(
-        userId: json.decode(response.body)['userId'],
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        country: user.country,
-        password: user.password,
-      );
-      print(newUser.firstName);
+
       if (response.statusCode == 200) {
+        if (!mounted) return;
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
       } else if (response.statusCode == 400) {
         throw const HttpException('Email Already Registered');
@@ -102,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         throw Exception(response.body);
       }
     } catch (error) {
-      throw (error);
+      rethrow;
     }
   }
 
@@ -124,6 +112,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _editedUser.password,
       );
       await addUser(_editedUser);
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("User added successfully!"),
@@ -270,40 +260,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         showCities: false,
                         showStates: false,
                         flagState: CountryFlag.DISABLE,
-                        // onStateChanged: (country) {
-                        //   setState(() {
-                        //     _selectedCountry = country!;
-                        //   });
-                        // },
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    //   child: TextFormField(
-                    //       initialValue: _initValues['country'],
-                    //       decoration: InputDecoration(
-                    //         labelText: 'Country of Residence',
-                    //         border: OutlineInputBorder(
-                    //           borderRadius: BorderRadius.circular(8),
-                    //         ),
-                    //       ),
-                    //       keyboardType: TextInputType.phone,
-                    //       validator: (value) {
-                    //         if (value!.isEmpty) {
-                    //           return 'Please enter your country!';
-                    //         }
-                    //         return null;
-                    //       },
-                    //       onSaved: (value) {
-                    //         _editedUser = User(
-                    //           firstName: _editedUser.firstName,
-                    //           lastName: _editedUser.lastName,
-                    //           email: _editedUser.email,
-                    //           country: value!,
-                    //           password: _editedUser.password,
-                    //         );
-                    //       }),
-                    // ),
                     const SizedBox(
                       height: 5,
                     ),

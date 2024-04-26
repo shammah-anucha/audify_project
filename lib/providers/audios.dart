@@ -6,36 +6,7 @@ import 'audio.dart';
 import 'package:http/http.dart' as http;
 
 class Audios with ChangeNotifier {
-  List<Audio> _audios = [
-    //   Audio(
-    //       audioId: 1,
-    //       bookId: 1,
-    //       userId: 1,
-    //       audioFile:
-    //           "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part1.mp3",
-    //       audioName: "the_frog_prince_part1",
-    //       bookImage:
-    //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
-    //   Audio(
-    //       audioId: 2,
-    //       bookId: 1,
-    //       userId: 1,
-    //       audioFile:
-    //           "https://myaudiobookapp.s3.eu-central-1.amazonaws.com/the_frog_prince_part2.mp3",
-    //       audioName: "the_frog_prince_part2",
-    //       bookImage:
-    //           "https://myaudiobookapp.s3.amazonaws.com/1_The-Frog-Prince-Landscape-Book-CKF-FKB.pdf.png"),
-    //   Audio(
-    //     audioId: 3,
-    //     bookId: 2,
-    //     userId: 1,
-    //     audioFile:
-    //         "https://myaudiobookapp.s3.amazonaws.com/sara_menker_part1.mp3",
-    //     audioName: "sara_menker",
-    //     bookImage:
-    //         "https://myaudiobookapp.s3.amazonaws.com/Data_Analysis_Plan_of_Sara_Menker.pdf.png",
-    //   ),
-  ];
+  List<Audio> _audios = [];
 
   // current song playing index
   int? _currentAudioIndex;
@@ -71,36 +42,6 @@ A U D I O P L A Y E R
     _isPlaying = true;
     notifyListeners();
   }
-
-  // void playAudio(int index) async {
-  //   // final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
-  //   print('index is: $index');
-  //   print(_audios);
-  //   int i = 0;
-  //   while (i < _audios.length) {
-  //     final audioUrl = _audios[i].audioFile;
-  //     print('audioUrl is: $audioUrl');
-  //     await _audioPlayer.stop();
-  //     await _audioPlayer.play(audioUrl);
-  //     _isPlaying = true;
-  //     _currentAudioIndex = index;
-  //     print('currentAudioIndex is: $_currentAudioIndex');
-  //     notifyListeners();
-  //   }
-  // }
-
-  // void playAudio(int index) async {
-  //   final audIndex = _audios.indexWhere((aud) => aud.audioId == index + 1);
-  //   final audioUrl = _audios[audIndex].audioFile;
-  //   print('index is: $index');
-  //   print('audIndex is: $audIndex');
-  //   print('audioUrl is: $audioUrl');
-  //   await _audioPlayer.stop();
-  //   await _audioPlayer.play(audioUrl);
-  //   _isPlaying = true;
-  //   _currentAudioIndex = index;
-  //   notifyListeners();
-  // }
 
 // pause current song
   void pauseAudio() async {
@@ -229,7 +170,6 @@ S E T T E R S
 
   Future<void> fetchAndSetAudios(String? token) async {
     String tokenString = token!;
-    print("Token string is: $tokenString");
 
     final url = Uri.parse('http://127.0.0.1:8000/api/v1/audios/');
 
@@ -261,7 +201,6 @@ S E T T E R S
     }
 
     _audios = loadedBook.toList();
-    print(_audios);
 
     notifyListeners();
   }
@@ -284,7 +223,6 @@ S E T T E R S
             "audio_name": audioName,
           }));
       final responseData = json.decode(response.body);
-      print(responseData);
       final newAudio = Audio(
         audioId: responseData['audio_id'],
         bookId: responseData['book_id'],
@@ -296,90 +234,15 @@ S E T T E R S
       _audios.add(newAudio);
       notifyListeners();
     } catch (error) {
-      print(error);
-      throw (error);
+      rethrow;
     }
   }
 
-  //   _events = loadedEvent.reversed.toList();
-  //   notifyListeners();
-  // }
-
-//   // final String baseUrl = "http://127.0.0.1:8000/api/v1/events/";
-
-//   // void _fetchDataFromTheServer() async {
-//   //   final Dio dio = Dio();
-//   // }
-
-// // http://127.0.0.1:8000/api/v1/events/
-//   Future<void> addEvent(Event event) async {
-//     final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/{event_id}');
-//     var uuid = Uuid();
-//     try {
-//       final response = await http.post(url,
-//           headers: <String, String>{
-//             'Content-Type': 'application/json; charset=UTF-8',
-//           },
-//           body: json.encode({
-//             // 'event_id': uuid.v4(),
-//             'title': event.title,
-//             'eventdate': event.eventdate,
-//             'time': event.time,
-//             'imageUrl': event.imageUrl,
-//             'location': event.location,
-//             'location_url': event.location_url,
-//             'host': event.host,
-//           }));
-//       print(json.decode(response.body));
-//       final newEvent = Event(
-//         event_id: json.decode(response.body)['event_id'],
-//         title: event.title,
-//         eventdate: event.eventdate,
-//         time: event.time,
-//         imageUrl: event.imageUrl,
-//         location: event.location,
-//         location_url: event.location_url,
-//         host: event.host,
-//       );
-//       _events.add(newEvent);
-//       notifyListeners();
-//     } catch (error) {
-//       print(error);
-//       throw (error);
-//     }
-//   }
-
-//   Future<void> updateEvent(String id, Event newEvent) async {
-//     final evIndex = _events.indexWhere((ev) => ev.event_id == id);
-//     final event_id = _events[evIndex].event_id;
-//     if (evIndex != null) {
-//       final url = Uri.parse('http://10.0.2.2:8000/api/v1/events/$event_id');
-//       await http.put(url,
-//           headers: <String, String>{
-//             'Content-Type': 'application/json; charset=UTF-8',
-//           },
-//           body: json.encode({
-//             'title': newEvent.title,
-//             'eventdate': newEvent.eventdate,
-//             'time': newEvent.time,
-//             'imageUrl': newEvent.imageUrl,
-//             'location': newEvent.location,
-//             'location_url': newEvent.location_url,
-//             'host': newEvent.host
-//           }));
-//       print(event_id);
-//       _events[evIndex] = newEvent;
-//       notifyListeners();
-//     } else {
-//       print('...');
-//     }
-//   }
-
   Future<void> deleteAudio(int id) async {
     final audioIndex = _audios.indexWhere((audio) => audio.audioId == id);
-    final audio_id = _audios[audioIndex].audioId;
+    final audioId = _audios[audioIndex].audioId;
     var existingAudio = _audios[audioIndex];
-    final url = Uri.parse('http://127.0.0.1:8000/api/v1/Books/$audio_id');
+    final url = Uri.parse('http://127.0.0.1:8000/api/v1/Books/$audioId');
     _audios.removeAt(audioIndex);
     notifyListeners();
     final response = await http.delete(url);
@@ -390,22 +253,6 @@ S E T T E R S
     }
     // existingBook = null;
   }
-
-  // Future<void> deleteAll(int id) async {
-  //   final audioIndex = _audios.indexWhere((audio) => audio.bookId == id);
-  //   final book_id = _audios[audioIndex].bookId;
-  //   var existingAudio = _audios[audioIndex];
-  //   final url = Uri.parse('http://127.0.0.1:8000/api/v1/audios/DeleteAll/$id');
-  //   _audios.removeAt(audioIndex);
-  //   notifyListeners();
-  //   final response = await http.delete(url);
-  //   if (response.statusCode >= 400) {
-  //     _audios.insert(audioIndex, existingAudio);
-  //     notifyListeners();
-  //     throw HttpException('Could not delete product.');
-  //   }
-  //   // existingBook = null;
-  // }
 
   Future<void> deleteAll(int bookId, String? token) async {
     String tokenString = token!;
@@ -423,7 +270,6 @@ S E T T E R S
         throw Exception('Could not delete audio.');
       }
     } catch (e) {
-      print('Error: $e');
       rethrow;
     }
   }

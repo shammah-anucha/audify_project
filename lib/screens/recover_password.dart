@@ -2,11 +2,10 @@ import 'package:audio_book_app/providers/reset_password.dart';
 import 'package:audio_book_app/screens/login_screen.dart';
 import 'package:audio_book_app/widgets/thankyou.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-// import '../models/http_exception.dart';
 import 'package:provider/provider.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
+  const RecoverPasswordScreen({super.key});
   static const routeName = '/recover-password';
 
   @override
@@ -39,10 +38,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   }
 
   Future<void> _submit() async {
-    // print(_userData['email']);
-    print("here");
     if (!_formKey.currentState!.validate()) {
-      // Invalid!
       return;
     }
     _formKey.currentState!.save();
@@ -53,6 +49,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
       await Provider.of<ForgotPassword>(context, listen: false).request(
         _userData['email'],
       );
+      if (!mounted) return;
       Navigator.of(context).pushReplacementNamed(Thankyou.routeName);
     } catch (error) {
       const errorMessage = 'Could not Send Email. Please try again later';
@@ -72,7 +69,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
             },

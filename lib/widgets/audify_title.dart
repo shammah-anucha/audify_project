@@ -7,7 +7,7 @@ class AudifyTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        margin: EdgeInsets.only(top: 100.0),
+        margin: const EdgeInsets.only(top: 100.0),
         color: Colors.white,
         child: const Text(
           'Audify',

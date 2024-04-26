@@ -12,7 +12,7 @@ class LogoutScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Audify'),
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: const Column(
         children: [Center(child: Text("Not ready"))],
       ),

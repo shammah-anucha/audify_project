@@ -1,15 +1,13 @@
-// import 'package:audio_book_app/providers/reset_password.dart';
 import 'package:audio_book_app/screens/home_screen.dart';
 import 'package:audio_book_app/screens/recover_password.dart';
 import 'package:audio_book_app/widgets/audify_title.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'signup_screen.dart';
-// import '../models/http_exception.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
   static const routeName = '/auth';
 
   @override
@@ -17,10 +15,6 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  // final GlobalKey<FormState> _formKey = GlobalKey();
-
-  // final _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -30,13 +24,13 @@ class _AuthScreenState extends State<AuthScreen> {
           color: Colors.white,
         ),
         SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: 1000,
             width: deviceSize.width,
             child: Column(children: [
-              AudifyTitle(),
+              const AudifyTitle(),
               Flexible(
-                child: Container(
+                child: SizedBox(
                   height: deviceSize.height * 0.4,
                   child: Center(
                     child: Image.asset('assets/png-clipart-audio-book.png'),
@@ -45,7 +39,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               Flexible(
                 flex: deviceSize.width > 800 ? 2 : 1,
-                child: AuthCard(),
+                child: const AuthCard(),
               ),
             ]),
           ),
@@ -56,6 +50,8 @@ class _AuthScreenState extends State<AuthScreen> {
 }
 
 class AuthCard extends StatefulWidget {
+  const AuthCard({super.key});
+
   @override
   State<AuthCard> createState() => _AuthCardState();
 }
@@ -101,25 +97,10 @@ class _AuthCardState extends State<AuthCard> {
         _authData['username'],
         _authData['password'],
       );
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-    }
+      if (!mounted) return;
 
-    // on HttpException catch (error) {
-    //   var errorMessage = 'Authentication failed';
-    //   if (error.toString().contains('EMAIL_EXISTS')) {
-    //     errorMessage = 'This email address is already in use.';
-    //   } else if (error.toString().contains('INVALID_EMAIL')) {
-    //     errorMessage = 'This is not a valid email address';
-    //   } else if (error.toString().contains('WEAK_PASSWORD')) {
-    //     errorMessage = 'This password is too weak.';
-    //   } else if (error.toString().contains('Incorrect email or password')) {
-    //     errorMessage = 'Could not find a user with that email';
-    //   } else if (error.toString().contains('INVALID_PASSWORD')) {
-    //     errorMessage = 'Invalid password';
-    //   }
-    //   _showErrorDialog(errorMessage);
-    catch (error) {
-      // const errorMessage = 'Could not authenticate you. Please try again later';
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+    } catch (error) {
       _showErrorDialog(error);
     }
 

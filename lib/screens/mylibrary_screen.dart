@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyLibraryScreen extends StatefulWidget {
-  const MyLibraryScreen({Key? key}) : super(key: key);
+  const MyLibraryScreen({super.key});
   static const routeName = '/mylibrary';
 
   @override
@@ -16,7 +16,7 @@ class MyLibraryScreen extends StatefulWidget {
 
 class _MyLibraryScreenState extends State<MyLibraryScreen> {
   // ignore: unused_field
-  var _isInit = true;
+  final _isInit = true;
   // ignore: unused_field
   var _isLoading = false;
 
@@ -69,7 +69,7 @@ class _MyLibraryScreenState extends State<MyLibraryScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('My Library'),
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: ListView.builder(
         itemCount: books.length,
         itemBuilder: (ctx, i) => Dismissible(

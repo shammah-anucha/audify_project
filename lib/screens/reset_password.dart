@@ -1,13 +1,11 @@
 import 'package:audio_book_app/providers/reset_password.dart';
-// import 'package:audio_book_app/screens/login_screen.dart';
 import 'package:audio_book_app/widgets/success.dart';
 import 'package:audio_book_app/widgets/thankyou.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-// import '../models/http_exception.dart';
 import 'package:provider/provider.dart';
 
 class ResetPassWordScreen extends StatefulWidget {
+  const ResetPassWordScreen({super.key});
   static const routeName = '/reset-password';
   @override
   State<ResetPassWordScreen> createState() => _ResetPassWordScreenState();
@@ -56,9 +54,9 @@ class _ResetPassWordScreenState extends State<ResetPassWordScreen> {
         _userData['new_password'],
         _userData['confirm_password'],
       );
+      if (!mounted) return;
       Navigator.of(context).pushReplacementNamed(SuccessScreen.routeName);
     } catch (error) {
-      // final errorMessage = error.toString();
       _showErrorDialog(error);
     }
 
@@ -74,15 +72,14 @@ class _ResetPassWordScreenState extends State<ResetPassWordScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(Thankyou.routeName);
           },
         ),
       ),
       body: Center(
-        child: Container(
-          // color: Colors.white,
+        child: SizedBox(
           width: deviceSize.width * 0.75,
           child: Form(
             key: _formKey,
@@ -133,7 +130,6 @@ class _ResetPassWordScreenState extends State<ResetPassWordScreen> {
                   height: 40,
                 ),
                 TextFormField(
-                  // initialValue: _initValues['password'],
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     border: OutlineInputBorder(

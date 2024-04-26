@@ -1,8 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class User with ChangeNotifier {
-  final String? userId;
+  final Int? userId;
   final String email;
   final String password;
   final String firstName;

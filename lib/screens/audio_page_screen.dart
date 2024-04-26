@@ -2,16 +2,12 @@ import 'package:audio_book_app/providers/audio.dart';
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/widgets/neu_box.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class AudioPage extends StatelessWidget {
-  // static const routeName = '/audio_page';
-  // const AudioPage({super.key});
-
   final List<Audio> filteredAudios;
 
-  const AudioPage({Key? key, required this.filteredAudios}) : super(key: key);
+  const AudioPage({super.key, required this.filteredAudios});
 
   // convert duration into min:sec
   String formatTime(Duration duration) {
@@ -29,10 +25,6 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // // Retrieve bookId from the navigation arguments
-    // final Map<String, dynamic> args =
-    //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // final int bookId = args['bookId'];
     return Consumer<Audios>(builder: (context, value, child) {
       // get playlist
       // Filter audios based on the bookId
@@ -56,7 +48,7 @@ class AudioPage extends StatelessWidget {
                     child: Column(
                   children: [
                     // image
-                    Container(
+                    SizedBox(
                       width: 300,
                       height: 300,
                       child: ClipRRect(
@@ -70,7 +62,7 @@ class AudioPage extends StatelessWidget {
                       child: Row(
                         children: [
                           // audio name
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: Text(
                               currentAudio.audioName,

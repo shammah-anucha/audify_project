@@ -11,7 +11,6 @@ class Auth with ChangeNotifier {
   late Timer _authTimer;
 
   bool get isAuth {
-    print(token != null);
     return token != null;
   }
 
@@ -22,41 +21,6 @@ class Auth with ChangeNotifier {
   int? get userId {
     return _userId;
   }
-
-  // Future<String?> _authenticate(String? email, String? password) async {
-  //   // final url = Uri.parse('http://127.0.0.1:8000/api/v1/login/access-token');
-  //   var dio = Dio();
-
-  //   try {
-  //     final body = FormData.fromMap({
-  //       "username": email,
-  //       "password": password,
-  //     });
-
-  //     var response = await dio.post(
-  //       "http://127.0.0.1:8000/api/v1/login/access-token",
-  //       data: body,
-  //     );
-
-  //     final responseData = response.data;
-
-  //     if (response.statusCode == 200) {
-  //       _token = responseData['access_token'];
-  //       _userId = responseData['user_id'];
-  //       print('Logged in successfully with access token: $_token');
-  //       notifyListeners();
-  //       return _token!;
-  //     } else if (response.statusCode == 405) {
-  //       throw Exception('Method Not Allowed');
-  //     } else if (response.statusCode == 400) {
-  //       throw Exception('Incorrect email or password');
-  //     } else {
-  //       throw Exception('Authentication failed');
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 
   Future<String?> _authenticate(String? email, String? password) async {
     final url = Uri.parse('http://127.0.0.1:8000/api/v1/login/access-token');
@@ -73,9 +37,8 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body) as Map<String, dynamic>;
 
       if (response.statusCode == 200) {
-        final _token = responseData['access_token'] as String;
-        // final _userId = responseData['user_id'] as String;
-        print('Logged in successfully with access token: $_token');
+        _token = responseData['access_token'] as String;
+        _userId = responseData['user_id'];
         notifyListeners();
         return _token;
       } else if (response.statusCode == 405) {
@@ -86,7 +49,7 @@ class Auth with ChangeNotifier {
         throw Exception('Authentication failed');
       }
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -123,7 +86,7 @@ class Auth with ChangeNotifier {
   }
 
   Auth() {
-    _authTimer =
-        Timer(Duration(seconds: 0), () {}); // Initialize with a dummy timer
+    _authTimer = Timer(
+        const Duration(seconds: 0), () {}); // Initialize with a dummy timer
   }
 }

@@ -1,7 +1,6 @@
 import 'package:audio_book_app/screens/login_screen.dart';
 import 'package:audio_book_app/screens/recover_password.dart';
 import 'package:flutter/material.dart';
-// import '../providers/auth.dart';
 
 class SuccessScreen extends StatelessWidget {
   static const routeName = '/success';
@@ -14,7 +13,7 @@ class SuccessScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context)
                 .pushReplacementNamed(RecoverPasswordScreen.routeName);
@@ -48,9 +47,6 @@ class SuccessScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.of(context)
-                  //     .pushReplacementNamed(AuthScreen.routeName);
-
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     AuthScreen.routeName,
                     (route) => true, // Remove all routes from the stack

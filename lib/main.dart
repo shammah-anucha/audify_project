@@ -2,7 +2,6 @@ import 'package:audio_book_app/models/conversion.dart';
 import 'package:audio_book_app/providers/audios.dart';
 import 'package:audio_book_app/providers/books.dart';
 import 'package:audio_book_app/providers/reset_password.dart';
-// import 'package:audio_book_app/screens/audio_page_screen.dart';
 import 'package:audio_book_app/screens/audio_player_screen.dart';
 import 'package:audio_book_app/screens/converting_screen.dart';
 import 'package:audio_book_app/screens/converting_second_screen.dart';
@@ -15,12 +14,10 @@ import 'package:audio_book_app/screens/reset_password.dart';
 import 'package:audio_book_app/screens/signup_screen.dart';
 import 'package:audio_book_app/widgets/success.dart';
 import 'package:audio_book_app/widgets/thankyou.dart';
-// import 'package:audio_book_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './providers/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +47,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => ConversionModel(),
-          child: MyApp(),
+          child: const MyApp(),
         )
       ],
       child: Consumer<Auth>(
@@ -70,7 +67,7 @@ class MyApp extends StatelessWidget {
                       // authResultSnapshot.connectionState ==
                       // ConnectionState.waiting
                       // ? SplashScreen()
-                      : AuthScreen(),
+                      : const AuthScreen(),
                   // ),
                   routes: {
                     HomeScreen.routeName: (ctx) => const HomeScreen(),
@@ -80,15 +77,15 @@ class MyApp extends StatelessWidget {
                         const ConvertingSecondScreen(),
                     LogoutScreen.routeName: (ctx) => const LogoutScreen(),
                     MyLibraryScreen.routeName: (ctx) => const MyLibraryScreen(),
-                    SignUpScreen.routeName: (ctx) => SignUpScreen(),
-                    AuthScreen.routeName: (ctx) => AuthScreen(),
+                    SignUpScreen.routeName: (ctx) => const SignUpScreen(),
+                    AuthScreen.routeName: (ctx) => const AuthScreen(),
                     AudioPlayerScreen.routeName: (ctx) =>
                         const AudioPlayerScreen(),
                     Thankyou.routeName: (ctx) => const Thankyou(),
                     RecoverPasswordScreen.routeName: (ctx) =>
-                        RecoverPasswordScreen(),
+                        const RecoverPasswordScreen(),
                     ResetPassWordScreen.routeName: (ctx) =>
-                        ResetPassWordScreen(),
+                        const ResetPassWordScreen(),
                     SuccessScreen.routeName: (ctx) => const SuccessScreen(),
                     // AudioPage.routeName: (ctx) => const AudioPage()
                   })),

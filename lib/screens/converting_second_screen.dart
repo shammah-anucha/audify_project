@@ -12,7 +12,7 @@ class ConvertingScreen extends StatelessWidget {
         title: const Text('Audify'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(

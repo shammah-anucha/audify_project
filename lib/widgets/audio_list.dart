@@ -5,7 +5,7 @@ import 'package:audio_book_app/providers/audio.dart';
 import 'package:provider/provider.dart';
 
 class AudioList extends StatelessWidget {
-  const AudioList({Key? key}) : super(key: key);
+  const AudioList({super.key});
 
   @override
   Widget build(BuildContext context) {
